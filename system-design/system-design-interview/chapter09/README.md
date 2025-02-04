@@ -16,11 +16,11 @@ We're tackling a classical system design problem - designing a URL shortening se
 Other functional requirements - high availability, scalability, fault tolerance.
 
 # Back of the envelope calculation
- * 100 mil URLs per day -> ~1200 URLs per second.
- * Assuming read-to-write ratio of 10:1 -> 12000 reads per second.
- * Assuming URL shortener will run for 10 years, we need to support 365bil records.
- * Average URL length is 100 characters
- * Storage requirements for 10y - 36.5 TB
+* 100 mil URLs per day -> ~1200 URLs per second.
+* Assuming read-to-write ratio of 10:1 -> 12000 reads per second.
+* Assuming URL shortener will run for 10 years, we need to support 365bil records. ( 100 mill per day -> 36.5 bil a year * 10y = 365 bil)
+* Average URL length is 100 characters
+* Storage requirements for 10y - ( 1 bil -> 1 gb , we have 365 bil records for 10 years, so storage required is 365 GB )
 
 # Step 2 - Propose high-level design and get buy-in
 ## API Endpoints
@@ -56,6 +56,8 @@ We'll explore the data model, hash function, URL shortening and redirection.
 In the simplified version, we're storing the URLs in a hash table. That is problematic as we'll run out of memory and also, in-memory doesn't persist across server reboot.
 
 That's why we can use a simple relational table instead:
+
+We can have a URL table, and store Primary Key(unique id created via Twitter's snowflake algo) , longUrl and shortURL
 ![url-table](images/url-table.png)
 
 ## Hash function
@@ -65,7 +67,7 @@ To figure out the smallest hash value we can use, we need to calculate n in `62^
 
 For the hash function itself, we can either use `base62 conversion` or `hash + collision detection`.
 
-In the latter case, we can use something like MD-5 or SHA256, but only taking the first 7 characters. To resolve collisions, we can reiterate \w an some padding to input string until there is no collision:
+In the latter case, we can use something like MD-5 or SHA256, but only taking the first 7 characters. To resolve collisions, we can reiterate with some padding to input string until there is no collision:
 ![hash-collision-mechanism](images/hash-collision-mechanism.png)
 
 The problem with this method is that we have to query the database to detect collision. Bloom filters could help in this case.
@@ -104,10 +106,29 @@ We discussed:
  * URL shortening
  * URL redirecting
 
-Additional talking points:
- * Rate limiter - We can introduce a rate limiter to protect us against malicious actors, trying to make too many URL shortening requests.
- * Web server scaling - We can easily scale the web tier by introducing more service instances as it's stateless.
- * Database scaling - Replication and sharding are a common approach to scale the data layer.
- * Analytics - Integrating analytics tracking in our URL shortener service can reap some business insights for clients such as "how many users clicked the link".
- * Availability, consistency, reliability - At the core of every distributed systems. We'd leverage concepts already discussed in [Chapter 02](../chapter02).
+## Additional talking points:
+* **Database scaling**
+  Replication(ensures availability) and sharding(can use consistent hashing to shard based on the snowflake IDs) are a common approach to scale the data layer.
+
+**Follow-up question here**
+
+How will write work, if we want to check if longURL exist or not first and then write?
+
+**Note**: We don't have the snowflake ID right now so we can hash it to get the shard where we can query.
+
+**Naive approach:**
+So we can query all shards in parallel to check if longURL exists in any of those
+
+**Better approach:**
+we can use a `(longURL -> snowflakeID)` centralised Hash-map(cache). We check in hashmap if ID exists or not, If we found the ID, we can generate the shortURL by base62 encoding and avoid querying the DB. If not found we generate a new ID, write in DB and update the cache too.
+
+To avoid using a large centralised cache, as it can become a bottleneck, we can use ElasticSearch to perform distributed searches.
+
+**Best approach(adds complexity to system)**
+on a write request, first check frequenting accessed URLs, stored in a redis cluster. If there is a cache miss, check in a Dynamo DB cluster which stores all `hash(longURL) -> ID pairs` (for sharding is done based on hash(longURL)). If not found, generate new ID and write them to SQL DB and dynamoDB
+
+* **Rate limiter** - We can introduce a rate limiter to protect us against malicious actors, trying to make too many URL shortening requests.
+* **Web server scaling** - We can easily scale the web tier by introducing more service instances as it's stateless. Further, as we have read heavy service, we can decouple the GET and Retrieve ops into separate services allowing us to scale them independently
+* Analytics - Integrating analytics tracking in our URL shortener service can reap some business insights for clients such as "how many users clicked the link".
+* Availability, consistency, reliability - At the core of every distributed systems. We'd leverage concepts already discussed in [Chapter 02](../chapter02).
 
