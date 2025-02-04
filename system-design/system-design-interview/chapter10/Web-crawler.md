@@ -22,6 +22,7 @@ Given average web page size is 500kb -> 500 TB per month -> 30 PB for 5y.
 - **Response Queue** - Once content is fetches, entry is made in this queue with ref to the stored content in cache. Each Processor receives a copy of this message, so they can work in parallel to do the processing
 
 ![img_1.png](img_1.png)
+
 Processors which performs task that we want, url extractor is default one which we need as we need to get more urls to keep on crawling, we can have more processors like Duplicate Detection. This part of design is extensible based on the use cases we have.
 - **URL extractor** - extract urls from content so that we can explore more pages. Checks for valid urls, remove blacklisted onces, do processing on urls like clubbing urls of same domains, remove urls with permalinks as they are actually the same urls that are processed.
 - **URL Filter** - filters urls based on usecase. If we want mp3 files, ignore all urls that are not mp3. it checks mimetype and regex pattern of url for filtering.
