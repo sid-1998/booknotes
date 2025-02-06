@@ -1,6 +1,8 @@
 # Design a Notification System
 Notification systems are a popular feature in many applications - it alerts a user for important news, product updates, events, etc.
 
+**also checkout this blog**: https://blog.algomaster.io/p/design-a-scalable-notification-service
+
 There are multiple flavors of a notification:
  * Mobile push notification
  * SMS
