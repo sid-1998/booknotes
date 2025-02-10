@@ -36,7 +36,7 @@ Here's some of the main endpoints.
 ![feed-publishing](images/feed-publishign.png)
  * User makes a new post via API.
  * Load balancer - distributes traffic to web servers.
- * Web servers - redirect traffic to internal services.
+ * Web servers - redirect traffic to internal services. This can be named as an orchestrator service. It will do basic auth and rate limiting and redirect request to appropriate internal service
  * Post service - persist post in database and cache.
  * Fanout service - push posts to friends' news feeds.
  * Notification service - inform new friends that content is available.
