@@ -23,7 +23,7 @@ So when userA sends a msg req for userB to chat server. Chat server req sessions
 ### How websocket connection is established between client and chat server
 - user makes a request, It goes to a API Gateway. The API Gateway does authentication(based on token, or password). and finds a suitable chat server and sends its connection info back to userA, so that userA can initiate a websocket connection request. Chat server after getting req sends back an ack is to user and a websocket connection is created. This info is mapped by session service in session db.
 
-- The responsibility of finding a suitable chat server can be delegated to a **Service Discovery**(Eg, Apache Zookeeper). The Zookeeper dynamically registers any new chat servers added. Monitor health and load on servers and can take intelligent decision.
+- **Service Discovery**(Eg, Apache Zookeeper). The Zookeeper dynamically registers any new chat servers added. Monitor health and maintain a updated list of all servers. Gateway queries the service discovery to get this list and route the request.
 
 
 ## Sent + delivered + read receipts
