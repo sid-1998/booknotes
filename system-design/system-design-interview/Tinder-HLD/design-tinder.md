@@ -29,7 +29,9 @@ We can take a hybrid approach of storing imageID against image URL, and the url 
 XMPP (Extensible Messaging and Presence Protocol) is a real-time communication protocol based on XML. It is widely used for instant messaging, presence detection, and real-time data exchange. XMPP is decentralized, open-standard, and extensible, making it a strong choice for chat applications.
 
 User needs to establish connection to server to send and receive messages. We will introduce a new service for this (SESSIONS service)
-it will have a DB of its own that stores userID->connectionID. It will check which connection is the other user using and send a message to that socket so that userB can reievce mesge of userA
+it will have a DB of its own that stores userID->connectionID. It will check which connection is the other user using and send a message to that socket so that userB can receive message of userA
+
+we need to have a dedicated xmpp server for real time chats, as API gateway are not suitable to maintain real time connections. The API gateway authenticates and route request to appropriate xmpp server and stores userID -> xmpp server mapping in cache. Client is provided info of xmpp server to create a connection. Now user can directly communicate with xmpp server **(this part is added later so it's not in diagram, more indepth discussion about chat system is done in design whatsapp notes)** 
 
 ### added direct messaging in HLD
 ![img_4.png](images/img_4.png)
