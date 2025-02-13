@@ -47,12 +47,13 @@ So when userA sends a msg req for userB to chat server. Chat server req sessions
 - We will introduce a Group service that maintains a GroupDB(stores mapping of groupID->userID). 
 - Sessions service when receives req for a group message it delegates it to group service which retrives the userID of all the users present in group.
 - Once all the userIDs are known, Sessions service sends message to the respective chat servers. Here to avoid a fan-out issue chat apps usually limit number of users in a group chat, otherwise the load will be drastice on the sessions service incase of group messages
+- We will use **noSQL DB with partition key as groupID** for group DB so that it can scale well. Also the group service will be sharded via **consistent hashing** with the hash on groupID
 ![img_1.png](img_1.png)
 
 ## Handle retry and user offline scenarios
 
-- We can introduce message queues, which stores the messages to be sent to user. Once user is online the message from queue goes to user. User is online or not can be found via LastSeen service.
-- We can add a notification system which send notifications if user is offline as per LastSeen service. Onces user is back online, Last Seen service signal the queue to send the message
+- We can introduce **message queues**, which stores the messages to be sent to user. Once user is online the message from queue goes to user. User is online or not can be found via **LastSeen service**.
+- We can add a **notification system** which send notifications if user is offline as per LastSeen service. Once user is back online, Last Seen service signal the queue to send the message
 
 
 
