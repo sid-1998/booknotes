@@ -33,3 +33,6 @@ Instead of getting the physical books, I've bought the online course, so there m
  * [Chapter 27 - Payment System](./chapter27)
  * [Chapter 28 - Digital Wallet](./chapter28)
  * [Chapter 29 - Stock Exchange](./chapter29)
+ * [Instagram - Refer for news feed](./Design-Instagram.md)
+ * [Tinder](./Tinder-HLD)
+ * [WhatsApp - refer for chat system](./Design%20Whatsapp)
