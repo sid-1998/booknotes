@@ -119,7 +119,7 @@ What happens once you get a conflict? We generate a second version of the file w
 ## High-level design
 ![high-level-design](images/high-level-design.png)
  * User uses the application through a browser or a mobile app
- * Block servers upload files to cloud storage. Block storage is a technology which allows you to split a big file in blocks and store the blocks in a backing storage. Dropbox, for example, stores blocks of size 4mb.
+ * Block servers upload files to cloud storage. Block storage is a technology which allows you to split a big file in blocks and store the blocks in a backing storage. Dropbox, for example, stores blocks of size 4mb. Also tells app servers to update metaData(provide path of chunks uploaded in S3). We will invalidate the cache on write to maintain strong consistency
  * Cloud storage - a file split into multiple blocks is stored in cloud storage
  * Cold storage - used for storing inactive files, infrequently accessed.
  * Load balancer - evenly distributes requests among API servers.
