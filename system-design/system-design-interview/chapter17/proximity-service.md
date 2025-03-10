@@ -16,7 +16,7 @@
 - Service needs to serve 5000 req/s. which is a high load. So a Distributed DB will handle load better. 
 - We can partition(Shard) mongoDB based on geoHash and use its inbuilt geospatial searching to query the correct shard. 
 - It takes lat/long and radius and calculates geoHash and then query the shard that matches the geohash.
-- There is no need of strong consistency so we can go for a noSQL DB. Chances related to info of a business need not to be reflected in real time, so eventual consistency is sufficient here.
+- There is no need of strong consistency so we can go for a noSQL DB. Changes related to info of a business need not to be reflected in real time, so eventual consistency is sufficient here.
 - Note that MongoDB does not support auto sharding, so manual partition creation will be needed.
 
 

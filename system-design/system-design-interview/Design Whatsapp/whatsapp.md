@@ -16,6 +16,8 @@ UserA will establish a connection with an instance of Gateway service(CHAT SERVE
 
 So when userA sends a msg req for userB to chat server. Chat server req sessions service to route the req to chat server connected to userB.
 
+**REFER the approach in tinder direct messaging notes, it discusses how redis pub/sub model can be used for faster communication**
+
 ![img.png](img.png)
  
 

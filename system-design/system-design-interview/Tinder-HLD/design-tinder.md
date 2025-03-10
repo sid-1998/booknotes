@@ -31,7 +31,17 @@ XMPP (Extensible Messaging and Presence Protocol) is a real-time communication p
 User needs to establish connection to server to send and receive messages. We will introduce a new service for this (SESSIONS service)
 it will have a DB of its own that stores userID->connectionID. It will check which connection is the other user using and send a message to that socket so that userB can receive message of userA
 
-we need to have a dedicated xmpp server for real time chats, as API gateway are not suitable to maintain real time connections. The API gateway authenticates and route request to appropriate xmpp server and stores userID -> xmpp server mapping in cache. Client is provided info of xmpp server to create a connection. Now user can directly communicate with xmpp server **(this part is added later so it's not in diagram, more indepth discussion about chat system is done in design whatsapp notes)** 
+we need to have a dedicated xmpp server for real time chats, as API gateway are not suitable to maintain real time connections. The API gateway authenticates and route request to appropriate xmpp server and stores userID -> xmpp server mapping in cache. Client is provided info of xmpp server to create a connection. Now user can directly communicate with xmpp server 
+
+### Better approach
+- Use websSockets as they are faster
+- Instead of having a sessions service and session DB fetch/store info of which user is connected to which websocket server(CHAT servers will be websocket servers). We will use redis pub/sub
+- UserA connects with ServerA. Same for User B. Each user will have a channel created for them in redis which other servers can subscribe to. In this case serverA subscribe to userA channel. This user->channel mapping is stored in redis
+- Now when userA sends message to user B, webserverA will fetch the channel id of userB and publish message to it.
+- ServerB which is subscribed to channel of userB. gets the message and sends it to userB via the websocket connection.
+- Note that redis pub/sub dont store messages so it wont be persisted. Meaning if user is not connected the message will be lost
+- If we need to persist messages and deliver when user gets back online. We will use a messaging queue. Publish messsage in queue if not able to send. UserB can poll the queue for any new messages when it is back
+
 
 ### added direct messaging in HLD
 ![img_4.png](images/img_4.png)
