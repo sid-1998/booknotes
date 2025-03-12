@@ -17,8 +17,8 @@
 - req send to delivery guy to accept the delivery or not.
 
 ### delivery guy is assigned
+![img](img.jpg)
 - we connect customer to a websocket server, which is subscribed to delivery partner's redis channel. 
 - delivery partner will periodically send there location to websocket. Websocket publish message to its redis channel. Customer gets location update its websocket server has subscribed to its channel
 
 
-## TODO: HLD diagrams for each feature
