@@ -5,10 +5,12 @@
 
 
 ### location based service: refer proximity service notes.
+![img_1.png](../Design%20Doordash%20(Zomato,%20Swiggy)/img_1.png)
 - onboard a new place, add its lat/long in redis and mongoDB
 - based on user lat/long do a geoSpacial query over redis
 
 ### assigning delivery guy
+![HLD - Frame 5.jpg](HLD%20-%20Frame%205.jpg)
 - delivery guys periodic locations are stored in location cache. he can be connected to a websocket. Polling can be implemented incase of fallback(websocket connection breaks)
 - we can have a HearBeat mechanism to check if websocket is connected to delivery partner. If websocket is disconnected we can evict the delivery guy last location from cache as it is now stale.
 - from the cafe where order is placed. We do a search on the location cache(again will use redis as it supports geoSpaial searches). to find the closest delivery partner.

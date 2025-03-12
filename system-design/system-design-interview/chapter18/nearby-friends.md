@@ -7,9 +7,6 @@ We will use websockets and  redis pub/sub for this
 **REFER tinder direct messaging for details of how they work together**
 
 #### Periodic location updates
-
-![img_1.png](img_1.png)
-
 - we assume that location refresh happens every 30s
 - location message is send to websocket connected to user
 - the websocket publish the message to redis channel dedicated for the user
