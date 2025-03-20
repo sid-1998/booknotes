@@ -68,7 +68,7 @@ The first type of messaging model is point-to-point and it's commonly found in t
 
 On the other hand, the publish-subscribe model is more common for event streaming platforms:
 ![publish-subscribe-model](images/publish-subscribe-model.png)
- * In this model, messages are associated to a topic.
+ * In this model, messages are associated to a topic. In Kafka terms, a topic is an append only log file which can be read by multiple consumers, and retains these msgs in log forms even after consumption for a configurable amount of time.
  * Consumers are subscribed to a topic and they receive all messages sent to this topic.
 
 ## Topics, partitions and brokers
