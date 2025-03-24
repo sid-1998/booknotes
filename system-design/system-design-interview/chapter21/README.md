@@ -106,7 +106,7 @@ The data storage system is the heart of this design.
 There are many databases, specifically tailored for storing time-series data. Many of them support custom query interfaces which allow for effective querying of time-series data.
  * OpenTSDB is a distributed time-series database, but it is based on Hadoop and HBase. If you don't have that infrastructure provisioned, it would be hard to use this tech.
  * Twitter uses MetricsDB, while Amazon offers Timestream.
- * The two most popular time-series databases are InfluxDB and Prometheus. 
+ * The two most popular time-series databases are **InfluxDB** and **Prometheus**. 
  * They are designed to store large volumes of time-series data. Both of them are based on in-memory cache + on-disk storage.
 
 Example scale of InfluxDB - more than 250k writes per second when provisioned with 8 cores and 32gb RAM:
@@ -145,7 +145,7 @@ Here's how the pull model might look like:
 For this solution, the metrics collector needs to maintain an up-to-date list of services and metrics endpoints.
 We can use Zookeeper or etcd for that purpose - service discovery.
 
-Service discovery contains contains configuration rules about when and where to collect metrics from:
+Service discovery contains configuration rules about when and where to collect metrics from:
 ![service-discovery-example](images/service-discovery-example.png)
 
 Here's a detailed explanation of the metrics collection flow:

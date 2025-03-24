@@ -229,7 +229,7 @@ This technique is called the **star schema** and is widely used in data warehous
 The filtering fields are called **dimensions**.
 
 This approach has the following benefits:
- * Simple to undertand and build
+ * Simple to understand and build
  * Current aggregation service can be reused to create more dimensions in the star schema.
  * Accessing data based on filtering criteria is fast as results are pre-calculated
 
