@@ -27,7 +27,7 @@ Instead of getting the physical books, I've bought the online course, so there m
  * [Chapter 21 - Metrics Monitoring And Alerting System](./chapter21)
  * [Chapter 22 - Ad Click Event Aggregation](./chapter22)
  * [Chapter 23 - Hotel Reservation System](./chapter23)
- * [Chapter 24 - Distributed Email Service](./chapter24)
+ * [Chapter 24 - Distributed Email Service: GMAIL](./chapter24)
  * [Chapter 25 - S3-like Object Storage](./chapter25)
  * [Chapter 26 - Real-time Gaming Leaderboard](./chapter26)
  * [Chapter 27 - Payment System](./chapter27)

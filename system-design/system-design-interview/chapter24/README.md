@@ -28,9 +28,9 @@ In 2020, gmail had 1.8bil active users, while Outlook had 400mil users worldwide
 # Step 2 - Propose High-Level Design and Get Buy-In
 ## Email knowledge 101
 There are various protocols used for sending and receiving emails:
- * SMTP - standard protocol for sending emails from one server to another.
- * POP - standard protocol for receiving and downloading emails from a remote mail server to a local client. Once retrieved, emails are deleted from remote server.
- * IMAP - similar to POP, it is used for receiving and downloading emails from a remote server, but it keeps the emails on the server-side.
+ * SMTP(Simple mail transfer protocol) - standard protocol for sending emails from one server to another.
+ * POP(Post office protocol) - standard protocol for receiving and downloading emails from a remote mail server to a local client. Once retrieved, emails are deleted from remote server.
+ * IMAP(Internet Message Access Protocol) - similar to POP, it is used for receiving and downloading emails from a remote server, but it keeps the emails on the server-side.
  * HTTPS - not technically an email protocol, but it can be used for web-based email clients.
 
 Apart from the mailing protocol, there are some DNS records we need to configure for our email server - the MX records:
