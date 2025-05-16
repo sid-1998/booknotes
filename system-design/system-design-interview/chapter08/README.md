@@ -11,7 +11,7 @@ A primary key with auto_increment won't work here, because generating IDs across
  * C: Do IDs contain only numerical values?
  * I: Yes
  * C: What is the ID length requirement?
- * I: 64 bytes
+ * I: 64 bit
  * C: What's the system scale?
  * I: We should be able to generate 10,000 IDs per second
 
@@ -33,7 +33,7 @@ This solves the scalability issues as id generation is confined within a single 
  * Adding/removing servers breaks this mechanism
 
 ## UUID
-A UUID is a 128-byte unique ID.
+A UUID is a 128-bit unique ID.
 
 The probability of UUID collision across the whole world is very little.
 
@@ -44,7 +44,7 @@ Pros:
  * Easy to scale.
 
 Cons:
- * IDs are 128 bytes, which doesn't fit our requirement
+ * IDs are 128 bit, which doesn't fit our requirement
  * IDs do not increase with time
  * IDs can be non-numeric
 
@@ -61,12 +61,12 @@ Cons:
  * Additional latency due to network call.
 
 ## Twitter snowflake approach
-Twitter's snowflake meets our design requirements because it is sortable by time, 64-bytes and can be generated independently in each server.
+Twitter's snowflake meets our design requirements because it is sortable by time, 64-bit and can be generated independently in each server.
 ![twitter-snowflake](images/twitter-snowflake.png)
 
 Breakdown of the different sections:
  * Sign bit - always 0. Reserved for future use.
- * Timestamp - 41 bytes. Milliseconds since epoch (or since custom epoch). Allows 69 years max.
+ * Timestamp - 41 bits. Milliseconds since epoch (or since custom epoch). Allows 69 years max.
  * Datacenter ID - 5 bits, which enables 32 data centers max.
  * Machine ID - 5 bits, which enables 32 machines per data center.
  * Sequence number - For every generated ID, the sequence number is incremented. Reset to 0 on every millisecond.
