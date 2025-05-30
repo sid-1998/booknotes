@@ -1,10 +1,17 @@
-## Requirements
+## Functional Requirements
+- What type of data we need to crawl(HTML, images, videos)
+- Providing seed urls
+- Recursive crawling: extract urls from pages and crawl on them
+- Content extraction(download html, or have a render that can render PWA)
+- Politeness/ rate limiting
+- Url filtering, detecting duplicate urls and avoid crawling them again
+- storage of page content/metadata
 
-- Politeness/crawl rate
-- DNS query
-- Distributed crawling
-- Priority crawling
-- Duplicate detection
+## Non-functional requirements
+- Scalability(need to crawl millions of pages) 
+- Extensibility(ability to plug in custom parsers, filters)
+- Throughput(crawl large number of pages per second without overwhelming target sites)
+
 
 ## Back of the envelope estimation
 Given 1 billion pages per month -> ~400 pages per second
@@ -37,10 +44,10 @@ Processors which performs task that we want, url extractor is default one which 
 - handle freshness (sites which updates frequently have high priority(eg: NEWS site))
 
 ### Frontier Components
-- **Front queues**: stores url to be processed. we assign a priority to each queue, and based on the priority of the url it goes to the appropriate queue. If we have priorities 1 to 100, we will have 100 front queues.
+- **Front queues**: stores url to be processed. we assign a priority to each queue, and based on the priority of the url it goes to the appropriate queue. If we have priorities 1 to 100, we will have 100 front queues. In real world we can have kafka topics based on priorities, and can push to those(like priority_high, priority_med can be topics).Router first fetches urls from high priority topics
 - **Prioritizer** - decides priority, based on the historical data we have about the url, (freq of updates on site, etc). We prioritize URLs by usefulness, which can be determined based on PageRank web traffic, update frequency, etc.
 - **Back Queue Router** - makes sure no **Back queue** is empty. Number of back queues is equal to number of workers in fetcher+render setup. 
-- **Back queue** - a queue is mapped with website, to ensure urls of same host are in one queue so that we can regulate the flow of requests to that website(**Politeness**). We use a map to store `hostname -> queue number` to send url to appropriate queue.
+- **Back queue** - a queue is mapped with website, to ensure urls of same host are in one queue so that we can regulate the flow of requests to that website(**Politeness**). We use a map to store `hostname -> queue number` to send url to appropriate queue. This can be done using Redis.
 - **BackQueue Selector** - Each worker thread is mapped to a FIFO queue and only downloads URLs from that queue. Queue selector chooses which worker processes which queue.
 
 Ignore heap here, too much info. (Sad cry!)
@@ -61,3 +68,4 @@ Do HEAD request to get last modified dateTime of webpage, compare it with the ti
 * Can use NOSql but will be expensive as we have a lot of data. 
 
 * S3 is better choice
+* Recent content can be added to cache as we want to process them and need to access it quickly. We can have a LRU based eviction policy
