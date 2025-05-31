@@ -41,7 +41,7 @@ design a live comment system, consider we have streams going on our system and u
 
 - once validation is done we can batch comments to process for feed and writing to db
 - we can use kafka where partition is done by stream_id to store comments and to be consumed by dbWriter workers and feed generation workers
-```declarative
+```
 {
   "comment_id": "c789",
   "user_id": "u123",
