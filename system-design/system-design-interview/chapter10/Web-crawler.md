@@ -50,7 +50,19 @@ Processors which performs task that we want, url extractor is default one which 
 - **Back queue** - a queue is mapped with website, to ensure urls of same host are in one queue so that we can regulate the flow of requests to that website(**Politeness**). We use a map to store `hostname -> queue number` to send url to appropriate queue. This can be done using Redis.
 - **BackQueue Selector** - Each worker thread is mapped to a FIFO queue and only downloads URLs from that queue. Queue selector chooses which worker processes which queue.
 
-Ignore heap here, too much info. (Sad cry!)
+#### How to maintain politeness/rate limiting
+- queue selector selects queue in round robin fashion
+- we maintain a map in redis of (domain->token, last refill time)  for rate limiting
+- selector selects queue, checks if we have enough token and do we need to refill tokens.
+- if yes -> send the url to fetcher
+- if no -> check for next queue
+- this way we can have a token based rate limiting in place
+
+#### Why per domain queue is needed?
+- if we use a single queue, we can encounter s situation where there are bunch of urls that are rate limited at the moment
+- we have to again enqueue them and poll the next till we find a valid url to process
+- if a domain is rate limited, and we have next 1000s of url for that domain in queue, we will be just enqueuing them and wont be processing anything
+- having diff domains per queue helps to reduce this in efficiency.
 
 #### How to check for updates in website?
 Do HEAD request to get last modified dateTime of webpage, compare it with the time it was last crawled
