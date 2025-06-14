@@ -24,22 +24,25 @@ We majorly discussed this, other features can be search, recommendation
 - 50 mill/100,000 = 500/sec (assuming we have 100,000 second in day for rough calculation)
 - Work to be done = 500*60sec = 30k workers will be needed
 
-**Question: what type of protocol is used to upload the video to server?**
+**Question: how does client uploads the file
 
-- Client use **resumable HTTP uploads protocol** to upload the video to server. 
-- Resumable HTTP uploads protocol is an application-layer mechanism that allows uploading files in chunks and resuming if interrupted
+- We avoid writing big files on the App Server entirely: instead, the App Server issues a pre-signed URL so the client uploads directly to S3
+- this leverage the S3 native Multipart upload API, which supports resumable uploads.
+- it allows user to upload the file in chunks
 
 ## Stream
+- The user requests a video via post req
+- app server checks if user is authorized to see the content doing basic validations
+- it responds with a pre-signed URL to user
+- the browser/player uses the url to stream the video
+- the req goes to CDN first and chunks of video are served via DASH protocol.In real world app, videos are served in chunks to reduce latency. **YouTube uses DASH (Dynamic Adaptive Streaming over HTTP)**, which breaks videos into small chunks (~2-10 seconds each)
+- if CDN does not have the video cached, req goes to S3 and the file is then cached at CDN and served to user.
 - Videos are cached at CDN to reduces latency and are served from there
-- In case of CDN miss. req goes to app server. and app server fetch metadata and video url from cache/DB and gets video from S3 based on url stored.  The video gets cached at CDN and served to user
-- In real world app, videos are served in chunks to reduce latency. **YouTube uses DASH (Dynamic Adaptive Streaming over HTTP)**, which breaks videos into small chunks (~2-10 seconds each)
-- these chunks are cached at CDN level. and gets downloaded on browser when user requests them.
-- CDNs are expensive so we try to cache only popular videos. As reads on popular ones will be more
-- Video stored as chunks helps to control resolution incase user have poor connection(we can start serving rest of the chunks in lower resolution to reduce buffering)
+- Video stored as chunks helps to control resolution in case user have poor connection(we can start serving rest of the chunks in lower resolution to reduce buffering)
 
 **Question: What protocol should be used for streaming?**
 
-In On demand streaming(Youtube, netflix, prime)
+In On demand streaming(YouTube, netflix, prime)
 - Reliability is more important than speed(You don't want frames getting dropped while watching a movie and missing the plot twist. Huh!!). So we use TCP
 - YouTube/Netflix use DASH (Dynamic Adaptive Streaming over HTTP), which works on top of TCP.
 - Content Delivery Networks (CDNs) Use HTTP/HTTPS, Which Runs on TCP
