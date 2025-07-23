@@ -46,9 +46,9 @@ Root Cause & Longer-Term Fix
 
 #### how to have concurrency for db writes
 
-- avoid locking rows(pessimistic locking)
+- avoid locking rows(pessimistic locking done using Select for update or atomic updates)
 - use pessimistic locking based on versions or timestamps and fail fast the req which reads later. This is good, but it causes many req to fail in highly concurrent setup
-- BEST : used atomic conditional writes instead of row locks as they are faster and req don't wait to take the lock. DB handles concurrency internally which is faster than app server taking a lock for a req 
+- BEST :  use cache to store and update affected row value and write to db in batches asynchronously
 
 #### how to handle backpressure in queue
 
