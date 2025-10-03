@@ -89,7 +89,7 @@ DynamoDB gives you the same wide-column model as-a-service. If we were infra-hea
 Pros: 
 faster search as its basically build on an inverted index. Search is faster than dynamoDB.
 
-this is how we can store data in ES. On querying a productID, ES quickly searches its index to fetch the userID lists.E S creates inverted indexes for each searchable field in doc, we can use userID and productID for our usecase
+this is how we can store data in ES. On querying a productID, ES quickly searches its index to fetch the userID lists. ES creates inverted indexes for each searchable field in doc, we can use userID and productID for our usecase
 ```declarative
 {
     "user_id": 4242,
@@ -108,7 +108,7 @@ this is how we can store data in ES. On querying a productID, ES quickly searche
 }
 ```
 Cons:
-- very update/delete is costly, as ES rebuilds the index on every update/delete.
+- every update/delete is costly, as ES rebuilds the index on every update/delete.
 
 
 **Mongo**
