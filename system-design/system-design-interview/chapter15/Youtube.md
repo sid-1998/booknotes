@@ -16,6 +16,7 @@ We majorly discussed this, other features can be search, recommendation
 - Encoding of videos are time-consuming so they can be done real time. So we add a message queue to process the raw videos.
 - Encoding servers picks the raw videos based on queue and process them and stores them in a separate S3. After processing they update the metatdata in cache and DB. The encoded videos are distributed over CDNs
 - Encoding consist of converting videos in different formats(to serve different clients) and resolutions to handle latencies(if user net connection is poor we start serving a lower resolution video)
+- Encoders chunks the videos and store each chunk as an object in S3.
 - **indepth detail of encoders is in booknotes. Avoid discussing in detail as it requires a lot of domain knowledge regarding encoders**
 
 **Question: How many encoders we need?**
