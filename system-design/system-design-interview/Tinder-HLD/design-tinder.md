@@ -36,9 +36,9 @@ we need to have a dedicated xmpp server for real time chats, as API gateway are 
 ### Better approach
 - Use websSockets as they are faster
 - Instead of having a sessions service and session DB fetch/store info of which user is connected to which websocket server(CHAT servers will be websocket servers). We will use redis pub/sub
-- UserA connects with ServerA. Same for User B. Each user will have a channel created for them in redis which other servers can subscribe to. In this case serverA subscribe to userA channel. This user->channel mapping is stored in redis
-- Now when userA sends message to user B, webserverA will fetch the channel id of userB and publish message to it.
-- ServerB which is subscribed to channel of userB. gets the message and sends it to userB via the websocket connection.
+- UserA connects with ServerA. Same for User B. Each server will have a channel created for it in redis and we also maintain a user->serverID mapping to know which user is connected to which server so tha we cna push mesage to that server channel.
+- Now when userA sends message to user B, webserverA will fetch the server id of userB and publish message to that servers channel.
+- ServerB which is subscribed to its channel. gets the message and sends it to userB via the websocket connection.
 - Note that redis pub/sub dont store messages so it wont be persisted. Meaning if user is not connected the message will be lost
 - If we need to persist messages and deliver when user gets back online. We will use a messaging queue. Publish messsage in queue if not able to send. UserB can poll the queue for any new messages when it is back
 

@@ -12,7 +12,7 @@ Supports multiple time windows:
 - Source: Kafka topic hotel_engagement containing hotel interaction events (clicks, views, bookings, etc.).
 - Each event includes:
 { hotelId, cityId, timestamp, eventType, weight }
-- Partitioning key: hotelId (ensures all events for a hotel go to the same worker).
+- Partitioning key: hash of hotelId (ensures all events for a hotel go to the same worker).
 
 2️⃣ Worker Tier (Sharded Aggregators)
 

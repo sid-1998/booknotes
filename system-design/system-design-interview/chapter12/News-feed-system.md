@@ -77,8 +77,7 @@ SQL (Nahh!)
 
 ## Feed flow
 - we need to provide updated feed in near real time <60s as per our req
-- brute force idea can be to generate the feed at runtime by first fetching followers of users, 
-  
+- brute force idea can be to generate the feed at runtime by first fetching followers of users,
   then getting each follower recent posts via post db and creating a feed for user.
 - We can precompute the feed for each user and serve it directly for optimizaton.
 - This can be done by maintaining a per-user feed store in cache/DB, by updating there feed store in real time.

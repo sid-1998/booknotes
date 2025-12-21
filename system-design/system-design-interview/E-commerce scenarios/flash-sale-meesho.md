@@ -47,7 +47,7 @@ I want you to focus on:
 - we tackle this we cna shard the partition and keep productID+shardID as the PK. Using this PK we can run parallel queries per shard to optimize the userID fetch call made by the service
 - we make parallel queries and send them to separate kafka partitions for parallel processing. This helps us to achieve the desired through put
 
-```declarative
+```
 Entries in wishlist table of DynamoDB, stored in a column-wide fashion
 
 Item 1 — shard 0
