@@ -59,6 +59,16 @@ design a live comment system, consider we have streams going on our system and u
 - we will use consistent hashing by user_id to select the live comment server to connect to so we have a spread of users across nodes
 - if we hash by stream_id and that stream becomes hot, users joining that stream will land on the same server and overload it.
 
+**we need to break streaming service into two parts.** 
+- one to consume comments, ingestion layer
+- two to fan out comments
+- why, because kafka ordering is per partition, so we need one consumer to consume per stream, and one partition can be connected to single consumer only.
+- SSE servers need to be sharded based on user id to distribute load. we need to have a mapping of streamID->list of servers which have users of that stream
+- this mapping is used by ingestion consumer to push to those servers which have users of the stream
+- to push we can set up a redis pub/sub
+
+
+
 ### feed generation service
 - when a new user joins we need to show it initial feed, say last 100 comments on initial load, rest comments we can load lazily
 - brute force approach is to query the db for last 50 comments from the current timestamp. This is really slow
